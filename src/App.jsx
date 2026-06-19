@@ -2362,9 +2362,9 @@ function LoginView({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false);
 
   // Caminhos para as imagens locais informadas
-  const bgImage = "/src/img/BG.svg";
-  const logoImage = "/src/img/Logo.svg";
-  const logoAlvorar = "/src/img/Logo Alvorar.svg";
+  const bgImage = "/src/img/bg.svg";
+  const logoImage = "/src/img/logo.svg";
+  const logoAlvorar = "/src/img/logo-alvorar.svg";
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-start lg:pl-[10%] bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${bgImage})` }}>
