@@ -654,7 +654,7 @@ export default function App() {
         ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64 lg:translate-x-0 lg:w-20'}
       `}>
         <div className={`p-6 flex items-center ${isSidebarOpen ? 'gap-3' : 'justify-center'}`}>
-          <img src="/vite.svg" alt="Logo" className="w-8 h-8 shrink-0 object-contain" onError={(e) => { e.target.onerror = null; e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"; }} />
+          <img src="/logo.svg" alt="Logo" className="w-8 h-8 shrink-0 object-contain" onError={(e) => { e.target.onerror = null; e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"; }} />
           {isSidebarOpen && <span className="font-semibold text-lg tracking-tight text-slate-900 dark:text-white truncate">Portal Qualidade</span>}
         </div>
 
@@ -728,7 +728,7 @@ export default function App() {
           <div className={`${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'} w-full max-w-5xl h-full sm:h-auto max-h-full sm:max-h-[90vh] overflow-hidden sm:rounded-2xl border shadow-xl flex flex-col relative animate-in zoom-in-95 duration-200`}>
             <div className={`px-4 sm:px-6 py-4 border-b flex justify-between items-center transition-colors modal-header-actions shrink-0 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
               <div className="flex items-center gap-2 sm:gap-3">
-                <img src="/vite.svg" alt="Logo" className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 object-contain" onError={(e) => { e.target.onerror = null; e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"; }} />
+                <img src="/logo.svg" alt="Logo" className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 object-contain" onError={(e) => { e.target.onerror = null; e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"; }} />
                 <h3 className={`font-semibold text-base sm:text-lg ${isDark ? 'text-white' : 'text-slate-900'} truncate`}>Relatório de Auditoria</h3>
               </div>
               <div className="flex gap-2 no-print shrink-0">
@@ -2361,10 +2361,10 @@ function LoginView({ onLogin }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // Caminhos para as imagens locais informadas
-  const bgImage = "/src/img/bg.svg";
-  const logoImage = "/src/img/logo.svg";
-  const logoAlvorar = "/src/img/logo-alvorar.svg";
+  // Caminhos para as imagens locais informadas (agora na pasta public)
+  const bgImage = "/bg.svg";
+  const logoImage = "/logo.svg";
+  const logoAlvorar = "/logo-alvorar.svg";
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center lg:justify-start lg:pl-[10%] bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${bgImage})` }}>
