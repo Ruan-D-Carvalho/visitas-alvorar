@@ -643,7 +643,7 @@ export default function App() {
   const isAdmin = user.role === 'admin';
 
   return (
-    <div className={`min-h-screen flex overflow-hidden transition-colors duration-300 ${isDark ? 'bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
+    <div id="app-wrapper" className={`min-h-screen flex overflow-hidden transition-colors duration-300 ${isDark ? 'bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
       
       {/* OVERLAY MOBILE PARA SIDEBAR */}
       {isSidebarOpen && (
@@ -780,42 +780,29 @@ export default function App() {
             margin: 0 !important; 
             padding: 0 !important; 
             height: auto !important;
+            width: auto !important;
             overflow: visible !important;
           }
-          div, main, #root {
-            overflow: visible !important;
+          #app-wrapper, main {
+            display: block !important;
             height: auto !important;
             min-height: auto !important;
-            max-height: none !important;
-            flex: none !important;
-            display: block !important;
-          }
-          * {
-            color-scheme: light !important;
-          }
-          #report-portal, #report-portal *, #report-portal p, #report-portal h3, #report-portal h4, #report-portal h5, #report-portal span {
-            color: black !important;
-            background-color: transparent !important;
-            border-color: #e2e8f0 !important;
+            overflow: visible !important;
+            position: static !important;
           }
           .no-print, aside, header, #content-container, .modal-header-actions button, .modal-header-actions .no-print { 
             display: none !important; 
           }
           #report-portal {
             display: block !important;
-            position: relative !important;
-            left: auto !important;
-            top: auto !important;
+            position: static !important;
             width: 100% !important;
             height: auto !important;
             overflow: visible !important;
             background: white !important;
             color: black !important;
-            z-index: auto !important;
             padding: 0 !important;
             margin: 0 !important;
-            backdrop-filter: none !important;
-            background-color: white !important;
           }
           #report-portal > div {
             border: none !important;
@@ -827,7 +814,6 @@ export default function App() {
             padding: 0 !important;
             margin: 0 !important;
             background: white !important;
-            color: black !important;
           }
           #report-portal .overflow-y-auto {
             overflow: visible !important;
@@ -835,9 +821,39 @@ export default function App() {
             height: auto !important;
             padding: 0 !important;
           }
+          
+          /* Força as cores de texto base para preto sem sobrescrever os badges coloridos */
+          #report-portal .text-white, 
+          #report-portal .text-slate-200, 
+          #report-portal .text-slate-300, 
+          #report-portal .text-slate-400 {
+            color: black !important;
+          }
+          #report-portal .text-slate-500 {
+            color: #64748b !important;
+          }
+          #report-portal .border-slate-800, 
+          #report-portal .border-slate-700 {
+            border-color: #e2e8f0 !important;
+          }
+          #report-portal .bg-slate-900,
+          #report-portal .bg-slate-800\\/50 {
+            background-color: transparent !important;
+          }
+
+          /* Evita cortes nos elementos ao mudar de página */
+          .break-inside-avoid {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+          }
+
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
           @page { 
             size: portrait; 
-            margin: 15mm 10mm; 
+            margin: 15mm; 
           }
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -2232,7 +2248,7 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
 
   return (
     <div className={`space-y-6 sm:space-y-8 ${textColor} text-left`}>
-      <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 border-b ${borderColor} pb-6 sm:pb-8`}>
+      <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 border-b ${borderColor} pb-6 sm:pb-8 break-inside-avoid`}>
         <div className="space-y-3 sm:space-y-4">
           <div>
             <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">Unidade Avaliada</p>
@@ -2255,7 +2271,7 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 break-inside-avoid">
         <div className={`${bgCard} p-4 sm:p-5 rounded-xl border ${borderColor}`}>
           <p className="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase mb-1">Score Obtido</p>
           <p className={`text-2xl sm:text-3xl font-bold ${parsedScore >= 80 ? 'text-emerald-500' : 'text-red-500'}`}>
@@ -2273,10 +2289,10 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
       </div>
 
       <div className="space-y-4 sm:space-y-6">
-        <h4 className={`text-base sm:text-lg font-bold border-l-4 pl-3 ${isDark ? 'border-blue-600' : 'border-[#0062FF]'}`}>Detalhamento dos Indicadores</h4>
+        <h4 className={`text-base sm:text-lg font-bold border-l-4 pl-3 break-inside-avoid ${isDark ? 'border-blue-600' : 'border-[#0062FF]'}`}>Detalhamento dos Indicadores</h4>
         
         {Object.keys(groupedDetails).length === 0 && (
-          <p className="text-slate-500 italic text-sm">Nenhum detalhe técnico foi recuperado para este relatório.</p>
+          <p className="text-slate-500 italic text-sm break-inside-avoid">Nenhum detalhe técnico foi recuperado para este relatório.</p>
         )}
 
         {Object.keys(groupedDetails).map(indId => {
@@ -2285,7 +2301,7 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
 
           return (
             <div key={indId} className="space-y-3 mt-4">
-              <h5 className={`text-xs sm:text-sm font-semibold uppercase tracking-wider ${isDark ? 'text-slate-400 border-slate-800' : 'text-slate-500 border-slate-200'} border-b pb-2`}>
+              <h5 className={`text-xs sm:text-sm font-semibold uppercase tracking-wider break-inside-avoid ${isDark ? 'text-slate-400 border-slate-800' : 'text-slate-500 border-slate-200'} border-b pb-2`}>
                 {indName}
               </h5>
 
@@ -2311,7 +2327,7 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
                   }
 
                   return (
-                    <div key={det.id || det.questionId} className={`${bgCard} border ${borderColor} rounded-lg p-4 sm:p-5`}>
+                    <div key={det.id || det.questionId} className={`break-inside-avoid ${bgCard} border ${borderColor} rounded-lg p-4 sm:p-5 mb-4`}>
                       <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
                         <p className="font-medium text-sm leading-relaxed flex-1">{q.text}</p>
                         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
