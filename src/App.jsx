@@ -2559,4 +2559,3 @@ function AccessLogView({ db, isDark }) {
     </div>
   );
 }
-git
