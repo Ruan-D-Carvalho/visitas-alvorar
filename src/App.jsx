@@ -47,7 +47,8 @@ import {
   Download,
   Lock,
   Eye,
-  EyeOff
+  EyeOff,
+  Activity
 } from 'lucide-react';
 
 // --- CONFIGURAÇÃO SUPABASE ---
@@ -449,7 +450,7 @@ function PerformanceBarChart({ data, isDark }) {
           </div>
 
           <div className="absolute left-0 right-0 border-t border-dashed border-emerald-500 z-10 flex items-center" style={{ bottom: `${target}%` }}>
-            <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 px-2 py-0.5 rounded-full absolute -left-4 -top-3">
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full absolute -left-4 -top-3 border ${isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
               Meta {target}%
             </span>
           </div>
@@ -498,7 +499,7 @@ export default function App() {
   const [selectedEval, setSelectedEval] = useState(null);
   const [expandedImg, setExpandedImg] = useState(null);
   const [isDark, setIsDark] = useState(localStorage.getItem('vq_theme') !== 'light');
-  const [db, setDb] = useState({ users: [], stores: [], evaluations: [], indicators: [], questions: [], channels: [], managers: [] });
+  const [db, setDb] = useState({ users: [], stores: [], evaluations: [], indicators: [], questions: [], channels: [], managers: [], userActivity: [] });
 
   useEffect(() => {
     let clientInstance = null;
@@ -540,7 +541,7 @@ export default function App() {
   const fetchData = async () => {
     if (!supabaseClient) return;
     try {
-      const [u, m, s, c, i, q, e] = await Promise.all([
+      const [u, m, s, c, i, q, e, ua] = await Promise.all([
         supabaseClient.from('users').select('*'),
         supabaseClient.from('managers').select('*'),
         supabaseClient.from('stores').select('*'),
@@ -550,7 +551,8 @@ export default function App() {
         supabaseClient.from('evaluations')
           .select('*, evaluation_details(id, question_id, answer, cp_validated)')
           .order('date', { ascending: false })
-          .limit(10000)
+          .limit(10000),
+        supabaseClient.from('user_activity').select('*')
       ]);
 
       const formattedEvals = keysToCamel(e.data || []).map(ev => ({
@@ -565,7 +567,8 @@ export default function App() {
         channels: keysToCamel(c.data || []),
         indicators: keysToCamel(i.data || []),
         questions: keysToCamel(q.data || []),
-        evaluations: formattedEvals
+        evaluations: formattedEvals,
+        userActivity: keysToCamel(ua.data || [])
       });
       setLoading(false);
     } catch (err) {
@@ -598,8 +601,11 @@ export default function App() {
   };
 
   const handleLogin = (email, password) => {
-    supabaseClient.from('users').select('*').eq('email', email.toLowerCase()).single().then(({data}) => {
+    supabaseClient.from('users').select('*').eq('email', email.toLowerCase()).single().then(async ({data}) => {
        if (data && data.password === password) {
+         // Registra o login na tabela user_activity
+         await supabaseClient.from('user_activity').insert({ user_id: data.id });
+
          const u = { 
            id: data.id, 
            name: data.name, 
@@ -653,9 +659,13 @@ export default function App() {
         ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}
         ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64 lg:translate-x-0 lg:w-20'}
       `}>
-        <div className={`p-6 flex items-center ${isSidebarOpen ? 'gap-3' : 'justify-center'}`}>
-          <img src="/logo.svg" alt="Logo" className="w-8 h-8 shrink-0 object-contain" onError={(e) => { e.target.onerror = null; e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"; }} />
-          {isSidebarOpen && <span className="font-semibold text-lg tracking-tight text-slate-900 dark:text-white truncate">Portal Qualidade</span>}
+        <div className="p-6 flex items-center justify-center min-h-[80px]">
+          <img 
+            src={isSidebarOpen ? "/logo.svg" : "/icons.svg"} 
+            alt="Logo" 
+            className={`transition-all duration-300 object-contain ${isSidebarOpen ? 'w-full h-10 sm:h-12' : 'w-8 h-8 shrink-0'}`} 
+            onError={(e) => { e.target.onerror = null; e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"; }} 
+          />
         </div>
 
         <nav className="mt-6 px-3 flex-1 space-y-1 overflow-y-auto no-scrollbar">
@@ -671,6 +681,7 @@ export default function App() {
                 <div className={`h-px my-6 mx-3 ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`} />
               )}
               <div className="space-y-1">
+                <NavItem icon={<Activity size={18}/>} label="Acessos" active={activeTab === 'acessos'} onClick={() => navClick('acessos')} collapsed={!isSidebarOpen} isDark={isDark} />
                 <NavItem icon={<PlusCircle size={18}/>} label="Nova Auditoria" active={activeTab === 'new'} onClick={() => navClick('new')} collapsed={!isSidebarOpen} isDark={isDark} />
                 <NavItem icon={<Settings size={18}/>} label="Configurações" active={activeTab === 'settings'} onClick={() => navClick('settings')} collapsed={!isSidebarOpen} isDark={isDark} />
               </div>
@@ -690,7 +701,7 @@ export default function App() {
             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className={`p-2 rounded-lg transition-colors block ${isDark ? 'hover:bg-slate-800 text-slate-300' : 'hover:bg-slate-100 text-slate-600'}`}>
               <Menu size={20} />
             </button>
-            <h2 className="text-lg md:text-xl font-semibold capitalize text-slate-900 dark:text-white truncate max-w-[150px] sm:max-w-none">
+            <h2 className={`text-lg md:text-xl font-semibold capitalize truncate max-w-[150px] sm:max-w-none ${isDark ? 'text-white' : 'text-slate-900'}`}>
               {activeTab === 'settings' ? 'Configurações do Sistema' : activeTab}
             </h2>
           </div>
@@ -704,7 +715,7 @@ export default function App() {
             </button>
 
             <div className="hidden sm:flex flex-col items-end">
-              <span className="text-sm font-semibold text-slate-900 dark:text-white">{user.name}</span>
+              <span className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{user.name}</span>
               <span className="text-xs text-slate-500 capitalize">{user.role === 'manager' ? 'Gestora' : user.role === 'admin' ? 'Admin' : 'Supervisora'}</span>
             </div>
             <div className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 ${isDark ? 'bg-blue-900/30 text-blue-400' : 'bg-[#EBFF00] text-[#0062FF] shadow-sm'}`}>
@@ -717,6 +728,7 @@ export default function App() {
           {activeTab === 'home' && <HomeView db={db} user={user} setActiveTab={navClick} onShowReport={handleShowReport} isDark={isDark} />}
           {activeTab === 'dashboard' && <DashboardView db={db} user={user} isDark={isDark} />}
           {activeTab === 'histórico' && <HistoryView db={db} user={user} onShowReport={handleShowReport} isDark={isDark} supabaseClient={supabaseClient} fetchData={fetchData} />}
+          {activeTab === 'acessos' && isAdmin && <AccessLogView db={db} isDark={isDark} />}
           {activeTab === 'new' && isAdmin && <NewAuditView db={db} supabaseClient={supabaseClient} onComplete={() => { fetchData(); navClick('histórico'); }} isDark={isDark} />}
           {activeTab === 'settings' && isAdmin && <ManagementView db={db} supabaseClient={supabaseClient} fetchData={fetchData} isDark={isDark} />}
         </div>
@@ -858,7 +870,7 @@ function HomeView({ db, user, setActiveTab, onShowReport, isDark }) {
       {/* HEADER BANNER */}
       <div className={`p-6 sm:p-8 md:p-10 rounded-2xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-[#0062FF] border-transparent'} shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden`}>
         <div className="relative z-10 w-full">
-          <h1 className={`text-2xl md:text-3xl font-black ${isDark ? 'text-white' : 'text-white'}`}>Portal Qualidade e Conformidade</h1>
+          <h1 className={`text-2xl md:text-3xl font-black text-white`}>Portal Qualidade e Conformidade</h1>
           <p className={`mt-2 text-sm md:text-base ${isDark ? 'text-slate-400' : 'text-white/90'} max-w-xl`}>Sistema centralizado de gestão técnica, auditorias de padronização e visualização de indicadores da rede.</p>
           <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3 w-full sm:w-auto">
             <Button onClick={() => setActiveTab('dashboard')} className="w-full sm:w-auto" variant={isDark ? "primary" : "secondary"} isDark={isDark}><BarChart3 size={16}/> Ver Dashboard</Button>
@@ -887,14 +899,14 @@ function HomeView({ db, user, setActiveTab, onShowReport, isDark }) {
               const score = Number(ev.score) || 0;
               return (
                 <Card key={ev.id} isDark={isDark} className={`p-4 flex items-center gap-3 md:gap-4 transition-colors cursor-pointer ${isDark ? 'hover:bg-slate-800' : 'hover:bg-slate-50'}`} onClick={() => onShowReport(ev)}>
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${score >= 80 ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400' : 'bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-400'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${score >= 80 ? (isDark ? 'bg-emerald-500/10 text-emerald-400' : 'bg-emerald-100 text-emerald-600') : (isDark ? 'bg-red-500/10 text-red-400' : 'bg-red-100 text-red-600')}`}>
                     {score >= 80 ? <CheckCircle2 size={20} /> : <AlertTriangle size={20} />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-medium truncate ${isDark ? 'text-slate-200' : 'text-slate-900'}`}>Auditoria em <span className="font-semibold">{store?.name}</span></p>
                     <p className={`text-xs mt-0.5 truncate ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Por {ev.evaluator} em {ev.date ? new Date(ev.date).toLocaleDateString('pt-BR') : '---'}</p>
                   </div>
-                  <div className={`font-semibold text-sm px-2 sm:px-2.5 py-1 rounded-md shrink-0 ${score >= 80 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400'}`}>
+                  <div className={`font-semibold text-sm px-2 sm:px-2.5 py-1 rounded-md shrink-0 ${score >= 80 ? (isDark ? 'bg-emerald-500/10 text-emerald-400' : 'bg-emerald-50 text-emerald-700') : (isDark ? 'bg-red-500/10 text-red-400' : 'bg-red-50 text-red-700')}`}>
                     {score.toFixed(1)}%
                   </div>
                 </Card>
@@ -1510,8 +1522,8 @@ function DashboardView({ db, user, isDark }) {
                 {matrixMonths.map(m => (
                   <th key={m} className="px-4 sm:px-6 py-3 font-medium text-center">{formatMonth(m)}</th>
                 ))}
-                <th className="px-4 sm:px-6 py-3 font-bold text-center border-l border-dashed border-slate-200 dark:border-slate-700">Geral</th>
-                <th className="px-4 sm:px-6 py-3 font-bold text-center border-l border-dashed border-slate-200 dark:border-slate-700">Zeradas</th>
+                <th className={`px-4 sm:px-6 py-3 font-bold text-center border-l border-dashed ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>Geral</th>
+                <th className={`px-4 sm:px-6 py-3 font-bold text-center border-l border-dashed ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>Zeradas</th>
               </tr>
             </thead>
             
@@ -1536,7 +1548,7 @@ function DashboardView({ db, user, isDark }) {
                               {score.toFixed(1)}%
                             </span>
                           ) : (
-                            <span className="text-slate-400 dark:text-slate-600">-</span>
+                            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>-</span>
                           )}
                           {visits > 0 && (
                             <span className={`text-[10px] font-medium uppercase tracking-wide px-1.5 py-0.5 rounded ${isDark ? 'bg-indigo-500/10 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
@@ -1548,14 +1560,14 @@ function DashboardView({ db, user, isDark }) {
                     );
                   })}
                   
-                  <td className={`px-4 sm:px-6 py-2.5 text-center border-l border-dashed border-slate-200 dark:border-slate-700`}>
+                  <td className={`px-4 sm:px-6 py-2.5 text-center border-l border-dashed ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>
                     <div className="flex flex-col items-center justify-center gap-1">
                       {row.totalScore !== null ? (
                         <span className={`font-bold ${row.totalScore >= 80 ? 'text-emerald-500' : 'text-amber-500'}`}>
                           {row.totalScore.toFixed(1)}%
                         </span>
                       ) : (
-                        <span className="text-slate-400 dark:text-slate-600">-</span>
+                        <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>-</span>
                       )}
                       {row.totalVisits > 0 && (
                         <span className={`text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded ${isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700'}`}>
@@ -1565,13 +1577,13 @@ function DashboardView({ db, user, isDark }) {
                     </div>
                   </td>
                   
-                  <td className={`px-4 sm:px-6 py-2.5 text-center border-l border-dashed border-slate-200 dark:border-slate-700`}>
+                  <td className={`px-4 sm:px-6 py-2.5 text-center border-l border-dashed ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>
                      {row.zeroedVisits > 0 ? (
-                       <span className="inline-flex items-center justify-center bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400 px-2.5 py-1 rounded-md text-sm font-bold">
+                       <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-md text-sm font-bold ${isDark ? 'bg-red-500/20 text-red-400' : 'bg-red-100 text-red-700'}`}>
                          {row.zeroedVisits}
                        </span>
                      ) : (
-                       <span className="text-slate-400 dark:text-slate-600">-</span>
+                       <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>-</span>
                      )}
                   </td>
                   
@@ -1606,7 +1618,7 @@ function DashboardView({ db, user, isDark }) {
                       </td>
                     );
                   })}
-                  <td className={`px-4 sm:px-6 py-3 text-center border-l border-dashed border-slate-300 dark:border-slate-600`}>
+                  <td className={`px-4 sm:px-6 py-3 text-center border-l border-dashed ${isDark ? 'border-slate-600' : 'border-slate-300'}`}>
                     <div className="flex flex-col items-center justify-center gap-1">
                       {(() => {
                         const globalScore = matrixTotals.globalVisits > 0 ? (matrixTotals.globalScoreSum / matrixTotals.globalVisits) : null;
@@ -1623,7 +1635,7 @@ function DashboardView({ db, user, isDark }) {
                       )}
                     </div>
                   </td>
-                  <td className={`px-4 sm:px-6 py-3 text-center border-l border-dashed border-slate-300 dark:border-slate-600`}>
+                  <td className={`px-4 sm:px-6 py-3 text-center border-l border-dashed ${isDark ? 'border-slate-600' : 'border-slate-300'}`}>
                      {matrixTotals.globalZeroes > 0 ? (
                         <span className={`text-sm font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>
                           {matrixTotals.globalZeroes}
@@ -1656,7 +1668,7 @@ function DashboardView({ db, user, isDark }) {
                 {matrixMonths.map(m => (
                   <th key={m} className="px-4 sm:px-6 py-3 font-medium text-left">{formatMonth(m)}</th>
                 ))}
-                <th className="px-4 sm:px-6 py-3 font-bold text-left border-l border-dashed border-slate-200 dark:border-slate-700">Geral</th>
+                <th className={`px-4 sm:px-6 py-3 font-bold text-left border-l border-dashed ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>Geral</th>
               </tr>
             </thead>
             
@@ -1673,7 +1685,7 @@ function DashboardView({ db, user, isDark }) {
                   {matrixMonths.map(m => {
                     const inds = row.monthData[m].indicators;
                     return (
-                      <td key={m} className="px-4 sm:px-6 py-3 text-left align-top border-l border-slate-100 dark:border-slate-800/50">
+                      <td key={m} className={`px-4 sm:px-6 py-3 text-left align-top border-l ${isDark ? 'border-slate-800/50' : 'border-slate-100'}`}>
                         <div className="flex flex-col gap-1.5 w-[140px] sm:w-[160px] whitespace-normal">
                           {inds && inds.length > 0 ? (
                             inds.map((ind, i) => (
@@ -1683,14 +1695,14 @@ function DashboardView({ db, user, isDark }) {
                               </div>
                             ))
                           ) : (
-                            <span className="text-slate-400 dark:text-slate-600 text-xs text-center block w-full">-</span>
+                            <span className={`text-xs text-center block w-full ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>-</span>
                           )}
                         </div>
                       </td>
                     );
                   })}
                   
-                  <td className={`px-4 sm:px-6 py-3 text-left align-top border-l border-dashed border-slate-200 dark:border-slate-700`}>
+                  <td className={`px-4 sm:px-6 py-3 text-left align-top border-l border-dashed ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>
                     <div className="flex flex-col gap-1.5 w-[150px] sm:w-[180px] whitespace-normal">
                       {row.totalIndicators && row.totalIndicators.length > 0 ? (
                         row.totalIndicators.map((ind, i) => (
@@ -1700,7 +1712,7 @@ function DashboardView({ db, user, isDark }) {
                           </div>
                         ))
                       ) : (
-                        <span className="text-slate-400 dark:text-slate-600 text-xs text-center block w-full">-</span>
+                        <span className={`text-xs text-center block w-full ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>-</span>
                       )}
                     </div>
                   </td>
@@ -1718,7 +1730,7 @@ function DashboardView({ db, user, isDark }) {
                   {matrixMonths.map(m => {
                     const inds = matrixTotals.monthData[m].indicators;
                     return (
-                      <td key={`total-${m}`} className="px-4 sm:px-6 py-3 text-left align-top border-l border-slate-200 dark:border-slate-700">
+                      <td key={`total-${m}`} className={`px-4 sm:px-6 py-3 text-left align-top border-l ${isDark ? 'border-slate-700' : 'border-slate-200'}`}>
                         <div className="flex flex-col gap-1.5 w-[140px] sm:w-[160px] whitespace-normal">
                           {inds && inds.length > 0 ? (
                             inds.map((ind, i) => (
@@ -1734,7 +1746,7 @@ function DashboardView({ db, user, isDark }) {
                       </td>
                     );
                   })}
-                  <td className={`px-4 sm:px-6 py-3 text-left align-top border-l border-dashed border-slate-300 dark:border-slate-600`}>
+                  <td className={`px-4 sm:px-6 py-3 text-left align-top border-l border-dashed ${isDark ? 'border-slate-600' : 'border-slate-300'}`}>
                     <div className="flex flex-col gap-1.5 w-[150px] sm:w-[180px] whitespace-normal">
                       {matrixTotals.globalIndicators && matrixTotals.globalIndicators.length > 0 ? (
                         matrixTotals.globalIndicators.map((ind, i) => (
@@ -1764,7 +1776,7 @@ function DashboardView({ db, user, isDark }) {
               return (
                 <div key={i} className={`flex items-center justify-between p-3 rounded-lg ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'} transition-colors`}>
                   <div className="flex items-center gap-3">
-                    <span className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-semibold shrink-0 ${i < 3 ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' : `${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600'}`}`}>#{i+1}</span>
+                    <span className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-semibold shrink-0 ${i < 3 ? (isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700') : (isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600')}`}>#{i+1}</span>
                     <span className={`text-sm font-medium truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{s.name}</span>
                   </div>
                   <span className={`text-sm font-semibold shrink-0 ${currentScore >= 80 ? 'text-emerald-500' : 'text-amber-500'}`}>{currentScore.toFixed(1)}%</span>
@@ -1783,7 +1795,7 @@ function DashboardView({ db, user, isDark }) {
               return (
                 <div key={i} className={`flex items-center justify-between p-3 rounded-lg ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'} transition-colors`}>
                   <div className="flex items-center gap-3">
-                    <span className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-semibold shrink-0 ${i < 3 ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400' : `${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600'}`}`}>#{i+1}</span>
+                    <span className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-semibold shrink-0 ${i < 3 ? (isDark ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-100 text-indigo-700') : (isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600')}`}>#{i+1}</span>
                     <span className={`text-sm font-medium truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{m.name}</span>
                   </div>
                   <span className={`text-sm font-semibold shrink-0 ${currentScore >= 80 ? 'text-emerald-500' : 'text-amber-500'}`}>{currentScore.toFixed(1)}%</span>
@@ -1812,7 +1824,7 @@ function DashboardView({ db, user, isDark }) {
                 <tr key={i} className={`transition-colors ${isDark ? 'hover:bg-slate-800/30' : 'hover:bg-slate-50'}`}>
                   <td className={`px-4 sm:px-6 py-3 ${isDark ? 'text-slate-300' : 'text-slate-700'} whitespace-normal max-w-[250px] sm:max-w-md`}>{p.text}</td>
                   <td className="px-4 sm:px-6 py-3 text-right align-top">
-                    <span className="inline-flex items-center justify-center bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400 px-2.5 py-1 rounded-md text-xs font-semibold">
+                    <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-md text-xs font-semibold ${isDark ? 'bg-red-500/10 text-red-400' : 'bg-red-100 text-red-700'}`}>
                       {p.count}
                     </span>
                   </td>
@@ -2431,3 +2443,120 @@ function LoginView({ onLogin }) {
     </div>
   );
 }
+
+function AccessLogView({ db, isDark }) {
+  const usersAccess = useMemo(() => {
+    const now = new Date();
+    return [...(db.users || [])].map(u => {
+      // Busca os registros de atividade para este usuário
+      const activities = (db.userActivity || []).filter(act => act.userId === u.id);
+      
+      // Encontra o registro mais recente
+      let lastActivity = null;
+      if (activities.length > 0) {
+        activities.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        lastActivity = activities[0];
+      }
+
+      const lastLogin = lastActivity ? new Date(lastActivity.createdAt) : null;
+      let diffDays = null;
+      if (lastLogin) {
+        const diffTime = Math.abs(now - lastLogin);
+        diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      }
+      return { ...u, lastLoginDate: lastLogin, diffDays };
+    }).sort((a, b) => {
+      // Ordenar para mostrar quem está há mais tempo sem logar ou nunca logou primeiro
+      if (a.diffDays === null && b.diffDays !== null) return -1;
+      if (b.diffDays === null && a.diffDays !== null) return 1;
+      if (a.diffDays === null && b.diffDays === null) return 0;
+      return b.diffDays - a.diffDays;
+    });
+  }, [db.users, db.userActivity]);
+
+  const stats = useMemo(() => {
+    let active = 0, inactive = 0, never = 0;
+    usersAccess.forEach(u => {
+      if (u.diffDays === null) never++;
+      else if (u.diffDays > 15) inactive++;
+      else active++;
+    });
+    return { active, inactive, never, total: usersAccess.length };
+  }, [usersAccess]);
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+        <div>
+          <h1 className={`text-xl sm:text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Monitoramento de Acessos</h1>
+          <p className={`text-xs sm:text-sm mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Verifique a atividade e último login dos usuários do sistema.</p>
+        </div>
+      </div>
+
+      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <StatCard isDark={isDark} title="Total de Usuários" value={stats.total} icon={<Users className="text-blue-500" size={20}/>} />
+        <StatCard isDark={isDark} title="Ativos recentes (≤ 15 dias)" value={stats.active} icon={<CheckCircle2 className="text-emerald-500" size={20}/>} />
+        <StatCard isDark={isDark} title="Inativos (> 15 dias)" value={stats.inactive} icon={<AlertTriangle className="text-amber-500" size={20}/>} />
+        <StatCard isDark={isDark} title="Nunca logaram" value={stats.never} icon={<MinusCircle className="text-slate-500" size={20}/>} />
+      </section>
+
+      <Card isDark={isDark} className="p-0">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap min-w-max">
+            <thead className={`${isDark ? 'bg-slate-800/50 text-slate-400' : 'bg-slate-50 text-slate-500'} font-medium`}>
+              <tr>
+                <th className="px-4 sm:px-6 py-3">Usuário</th>
+                <th className="px-4 sm:px-6 py-3">Função</th>
+                <th className="px-4 sm:px-6 py-3">Último Acesso</th>
+                <th className="px-4 sm:px-6 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody className={`divide-y ${isDark ? 'divide-slate-800' : 'divide-slate-200'}`}>
+              {usersAccess.map(u => {
+                let badgeType = 'neutral';
+                let statusText = 'Nunca acessou';
+                if (u.diffDays !== null) {
+                  if (u.diffDays <= 7) { badgeType = 'success'; statusText = 'Ativo recente'; }
+                  else if (u.diffDays <= 15) { badgeType = 'primary'; statusText = 'Ativo'; }
+                  else if (u.diffDays <= 30) { badgeType = 'warning'; statusText = 'Inativo moderado'; }
+                  else { badgeType = 'danger'; statusText = 'Inativo há muito tempo'; }
+                }
+
+                return (
+                  <tr key={u.id} className={`${isDark ? 'hover:bg-slate-800/30' : 'hover:bg-slate-50/50'} transition-colors`}>
+                    <td className="px-4 sm:px-6 py-4">
+                      <p className={`font-medium ${isDark ? 'text-slate-200' : 'text-slate-900'} max-w-[200px] truncate`}>{u.name}</p>
+                      <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{u.email}</p>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                       <Badge isDark={isDark} type="neutral">{u.role === 'admin' ? 'Admin' : u.role === 'manager' ? 'Gestora' : 'Supervisor'}</Badge>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <p className={`font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                        {u.lastLoginDate ? u.lastLoginDate.toLocaleDateString('pt-BR') + ' às ' + u.lastLoginDate.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) : '---'}
+                      </p>
+                      {u.diffDays !== null && (
+                        <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                          {u.diffDays === 0 ? 'Hoje' : `Há ${u.diffDays} dias`}
+                        </p>
+                      )}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <Badge isDark={isDark} type={badgeType}>{statusText}</Badge>
+                    </td>
+                  </tr>
+                );
+              })}
+              {usersAccess.length === 0 && (
+                <tr>
+                  <td colSpan="4" className="px-6 py-8 text-center text-sm text-slate-500">Nenhum registro encontrado.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+}
+git
