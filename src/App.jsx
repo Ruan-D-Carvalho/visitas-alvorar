@@ -744,7 +744,9 @@ export default function App() {
                 <h3 className={`font-semibold text-base sm:text-lg ${isDark ? 'text-white' : 'text-slate-900'} truncate`}>Relatório de Auditoria</h3>
               </div>
               <div className="flex gap-2 no-print shrink-0">
-                <Button variant="outline" onClick={() => window.print()} className="py-2 text-xs hidden sm:flex" isDark={isDark}><Printer size={16}/> Imprimir</Button>
+                <Button variant="outline" onClick={() => window.print()} className="py-2 px-3 text-xs flex" isDark={isDark}>
+                  <Printer size={16}/> <span className="hidden sm:inline ml-1">Imprimir</span>
+                </Button>
                 <button onClick={() => setSelectedEval(null)} className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-600'}`}><X size={20}/></button>
               </div>
             </div>
@@ -772,6 +774,7 @@ export default function App() {
         </div>
       )}
 
+      {}
       <style>{`
         @media print {
           body, html { 
@@ -1090,20 +1093,6 @@ function ManagementView({ db, supabaseClient, fetchData, isDark }) {
         </div>
       )}
     </div>
-  );
-}
-
-function UserForm({ editingItem, db, isDark }) {
-  const [role, setRole] = useState(editingItem?.role || 'manager');
-  return (
-    <>
-      <FormInput label="Nome" name="name" isDark={isDark} defaultValue={editingItem?.name} required />
-      <FormInput label="E-mail" name="email" isDark={isDark} type="email" defaultValue={editingItem?.email} required />
-      <FormInput label="Senha" name="password" isDark={isDark} defaultValue={editingItem?.password || ''} required type="password" />
-      <FormSelect label="Função" name="role" isDark={isDark} value={role} onChange={e => setRole(e.target.value)}><option value="admin">Administrador</option><option value="manager">Gestora</option><option value="supervisor">Supervisora</option></FormSelect>
-      {role === 'manager' && (<FormSelect label="Unidade Vinculada (Obrigatório)" isDark={isDark} name="storeId" defaultValue={editingItem?.storeId} required><option value="">Selecione a loja...</option>{db.stores.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</FormSelect>)}
-      {role === 'supervisor' && (<div className="space-y-1.5"><label className={`text-xs font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Lojas Acessíveis (IDs separados por vírgula)</label><input className={`w-full border rounded-lg px-3 py-2 text-sm outline-none transition-all ${isDark ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'}`} name="accessibleStores" placeholder="Ex: 1, 4, 12" defaultValue={editingItem?.accessibleStores?.join(', ')} /></div>)}
-    </>
   );
 }
 
@@ -2039,6 +2028,17 @@ function NewAuditView({ db, supabaseClient, onComplete, isDark }) {
     reader.readAsDataURL(file);
   };
 
+  const handleRemoveImage = (qId, imgIndex) => {
+    setAnswers(prev => {
+      const currentMedia = prev[qId]?.media || [];
+      const newMedia = currentMedia.filter((_, i) => i !== imgIndex);
+      return {
+        ...prev,
+        [qId]: { ...prev[qId], media: newMedia }
+      };
+    });
+  };
+
   const calculateScore = () => {
     const store = db.stores.find(s => s.id == config.storeId);
     if (!store) return 100;
@@ -2177,7 +2177,26 @@ function NewAuditView({ db, supabaseClient, onComplete, isDark }) {
                   <textarea placeholder="Insira observações ou evidências adicionais..." className={`w-full min-h-[100px] border rounded-lg p-3 text-sm outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'}`} value={answers[q.id]?.comment} onChange={e => handleAnswer(q.id, 'inconforme', answers[q.id]?.cp, e.target.value)} />
                   <Button variant="outline" onClick={() => document.getElementById(`file-q-${q.id}`).click()} className="text-xs w-full sm:w-auto" isDark={isDark}><Camera size={14}/> Anexar Evidência</Button>
                   <input type="file" id={`file-q-${q.id}`} className="hidden" accept="image/*" onChange={(e) => handleFileUpload(q.id, e)} />
-                  <div className="flex gap-3 overflow-x-auto pt-2">{answers[q.id]?.media?.map((img, i) => <img key={i} src={img.url} className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border shrink-0 ${isDark ? 'border-slate-700' : 'border-slate-200'}`} />)}</div>
+                  
+                  <div className="flex gap-3 overflow-x-auto py-2">
+                    {answers[q.id]?.media?.map((img, i) => (
+                      <div key={i} className="relative group shrink-0">
+                        <img 
+                          src={img.url} 
+                          className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border ${isDark ? 'border-slate-700' : 'border-slate-200'}`} 
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(q.id, i)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                          title="Remover imagem"
+                        >
+                          <X size={12} strokeWidth={3} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  
                 </div>
               )}
             </Card>
@@ -2248,6 +2267,22 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
 
   return (
     <div className={`space-y-6 sm:space-y-8 ${textColor} text-left`}>
+      
+      {/* CABEÇALHO EXCLUSIVO PARA IMPRESSÃO */}
+      <div className="hidden print:flex items-center justify-between border-b-2 border-slate-300 pb-6 mb-8 break-inside-avoid">
+        <div className="flex items-center gap-6">
+          <img src="/logo.svg" alt="Logo Qualidade" className="h-14 object-contain" />
+          <div className="h-10 w-px bg-slate-300"></div>
+          <img src="/logo-alvorar.svg" alt="Logo Alvorar" className="h-10 object-contain" />
+        </div>
+        <div className="text-right">
+          <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900">Relatório de Auditoria</h1>
+          <p className="text-sm font-medium text-slate-500 mt-1">
+            Emitido em {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+          </p>
+        </div>
+      </div>
+
       <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 border-b ${borderColor} pb-6 sm:pb-8 break-inside-avoid`}>
         <div className="space-y-3 sm:space-y-4">
           <div>
@@ -2345,13 +2380,22 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
                         </div>
                       )}
 
+                      {/* LAYOUT DE IMAGENS MELHORADO PARA IMPRESSÃO */}
                       {mediaArray && mediaArray.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {mediaArray.map((img, i) => (
-                            <div key={i} className="relative group cursor-zoom-in" onClick={() => onExpandImage(img.url || img)}>
-                              <img src={typeof img === 'string' ? img : img.url} className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md border ${borderColor} hover:opacity-80 transition-opacity`} />
-                            </div>
-                          ))}
+                        <div className="mt-4 pt-4 border-t border-dashed border-slate-200 print:border-slate-300">
+                          <p className="text-[10px] sm:text-xs font-semibold uppercase text-slate-500 mb-3 print:text-slate-600">
+                            Evidências Fotográficas Adicionadas
+                          </p>
+                          <div className="flex flex-wrap gap-3 print:gap-5">
+                            {mediaArray.map((img, i) => (
+                              <div key={i} className="relative group cursor-zoom-in break-inside-avoid" onClick={() => onExpandImage(img.url || img)}>
+                                <img 
+                                  src={typeof img === 'string' ? img : img.url} 
+                                  className={`w-16 h-16 sm:w-20 sm:h-20 print:w-48 print:h-48 object-cover rounded-md print:rounded-xl border ${borderColor} print:border-slate-300 print:shadow-md hover:opacity-80 transition-opacity`} 
+                                />
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
