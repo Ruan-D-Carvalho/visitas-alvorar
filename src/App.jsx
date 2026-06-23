@@ -174,7 +174,6 @@ function MonthlyComboChart({ data, isDark }) {
       >
         <div className="relative h-56 sm:h-64 flex items-end ml-8 sm:ml-10 mr-8 sm:mr-10">
           
-          {/* Grid Lines */}
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {[100, 75, 50, 25, 0].map((pct, i) => {
               const scoreVal = pct;
@@ -193,7 +192,6 @@ function MonthlyComboChart({ data, isDark }) {
             })}
           </div>
 
-          {/* Bars Wrapper */}
           <div className="relative w-full h-full flex items-end justify-around gap-4 z-20">
             {data.map((item, idx) => {
               const scoreHeight = (item.score / maxScore) * 100;
@@ -201,8 +199,6 @@ function MonthlyComboChart({ data, isDark }) {
               
               return (
                 <div key={idx} className="flex-1 flex justify-center gap-1 sm:gap-2 h-full relative group" style={{ maxWidth: '80px' }}>
-                  
-                  {/* Score Bar */}
                   <div className="w-1/2 h-full flex flex-col justify-end items-center relative">
                     <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${scoreHeight}%` }}>
                       <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
@@ -211,8 +207,6 @@ function MonthlyComboChart({ data, isDark }) {
                     </div>
                     <div className="w-full rounded-t-sm transition-all duration-1000 ease-out bg-emerald-500 hover:bg-emerald-400" style={{ height: `${scoreHeight}%` }} />
                   </div>
-
-                  {/* Visits Bar */}
                   <div className="w-1/2 h-full flex flex-col justify-end items-center relative">
                     <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${visitsHeight}%` }}>
                       <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
@@ -221,8 +215,6 @@ function MonthlyComboChart({ data, isDark }) {
                     </div>
                     <div className="w-full rounded-t-sm transition-all duration-1000 ease-out bg-indigo-500 hover:bg-indigo-400" style={{ height: `${visitsHeight}%` }} />
                   </div>
-
-                  {/* Month Label X Axis */}
                   <div className="absolute top-full mt-2 w-full flex justify-center">
                     <span className={`text-[10px] font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'} whitespace-nowrap`}>
                       {item.label}
@@ -232,7 +224,6 @@ function MonthlyComboChart({ data, isDark }) {
               );
             })}
           </div>
-
         </div>
       </div>
     </div>
@@ -255,8 +246,6 @@ function IndicatorBarChart({ data, isDark }) {
         style={{ minWidth: data.length > 6 ? `${data.length * 60}px` : '100%' }}
       >
         <div className="relative h-56 sm:h-64 flex items-end ml-8 sm:ml-10">
-          
-          {/* Grid Lines */}
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {gridLines.map((val, i) => (
               <div key={i} className="w-full flex items-center gap-2 absolute" style={{ bottom: `${(val / gridMax) * 100}%`, transform: 'translateY(50%)' }}>
@@ -267,8 +256,6 @@ function IndicatorBarChart({ data, isDark }) {
               </div>
             ))}
           </div>
-
-          {/* Bars Wrapper */}
           <div className="relative w-full h-full flex items-end justify-around gap-2 z-20">
             {data.map((item, idx) => {
               const count = Number(item.count) || 0;
@@ -276,23 +263,17 @@ function IndicatorBarChart({ data, isDark }) {
               
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center relative h-full justify-end group" style={{ maxWidth: '50px' }}>
-                  
-                  {/* Rótulo Permanentemente Visível acima da barra */}
                   <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${barHeight}%` }}>
                     <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
                       {count}
                     </span>
                   </div>
-
-                  {/* Bar Container */}
                   <div className={`w-full relative transition-all duration-700 ${isDark ? 'bg-slate-800/50' : 'bg-slate-100'} h-full flex flex-col justify-end rounded-t-sm overflow-hidden`}>
                     <div 
                       className="w-full rounded-t-sm transition-all duration-1000 ease-out bg-amber-500 hover:bg-amber-400"
                       style={{ height: `${barHeight}%` }}
                     />
                   </div>
-
-                  {/* Rotulo Eixo X (Nome do Indicador) */}
                   <div className="absolute top-full mt-2 w-full flex justify-center px-1">
                     <span 
                       className={`text-[9px] leading-tight text-center font-medium whitespace-normal break-words ${isDark ? 'text-slate-400' : 'text-slate-500'} w-14 sm:w-20 line-clamp-3`}
@@ -305,7 +286,6 @@ function IndicatorBarChart({ data, isDark }) {
               );
             })}
           </div>
-
         </div>
       </div>
     </div>
@@ -324,8 +304,6 @@ function VisitsBarChart({ data, isDark }) {
         style={{ minWidth: data.length > 8 ? `${data.length * 50}px` : '100%' }}
       >
         <div className="relative h-56 sm:h-64 flex items-end ml-8 sm:ml-10">
-          
-          {/* Grid Lines */}
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {gridLines.map((val, i) => (
               <div key={i} className="w-full flex items-center gap-2 absolute" style={{ bottom: `${(val / gridMax) * 100}%`, transform: 'translateY(50%)' }}>
@@ -336,8 +314,6 @@ function VisitsBarChart({ data, isDark }) {
               </div>
             ))}
           </div>
-
-          {/* Bars Wrapper */}
           <div className="relative w-full h-full flex items-end justify-around gap-1 sm:gap-2 z-20">
             {data.map((item, idx) => {
               const visits = Number(item.visits) || 0;
@@ -368,7 +344,6 @@ function VisitsBarChart({ data, isDark }) {
               );
             })}
           </div>
-
         </div>
       </div>
     </div>
@@ -494,7 +469,6 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('home');
-  // Define a visibilidade inicial com base no tamanho da tela (para mobile começa fechado)
   const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1024);
   const [selectedEval, setSelectedEval] = useState(null);
   const [expandedImg, setExpandedImg] = useState(null);
@@ -521,7 +495,6 @@ export default function App() {
     const loggedUser = localStorage.getItem('vq_user');
     if (loggedUser) setUser(JSON.parse(loggedUser));
     
-    // Ouve redimensionamento para ajustar o sidebar automaticamente
     const handleResize = () => {
       if (window.innerWidth > 1024) setSidebarOpen(true);
       else setSidebarOpen(false);
@@ -603,9 +576,7 @@ export default function App() {
   const handleLogin = (email, password) => {
     supabaseClient.from('users').select('*').eq('email', email.toLowerCase()).single().then(async ({data}) => {
        if (data && data.password === password) {
-         // Registra o login na tabela user_activity
          await supabaseClient.from('user_activity').insert({ user_id: data.id });
-
          const u = { 
            id: data.id, 
            name: data.name, 
@@ -625,7 +596,6 @@ export default function App() {
     window.location.reload();
   };
 
-  // Wrapper para fechar o sidebar no mobile ao clicar num link
   const navClick = (tab) => {
     setActiveTab(tab);
     if (window.innerWidth < 1024) setSidebarOpen(false);
@@ -645,7 +615,6 @@ export default function App() {
   return (
     <div id="app-wrapper" className={`min-h-screen flex overflow-hidden transition-colors duration-300 ${isDark ? 'bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
       
-      {/* OVERLAY MOBILE PARA SIDEBAR */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 lg:hidden"
@@ -653,7 +622,6 @@ export default function App() {
         />
       )}
 
-      {/* SIDEBAR */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 flex flex-col no-print transition-all duration-300 border-r
         ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}
@@ -694,7 +662,6 @@ export default function App() {
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
       <main className={`flex-1 transition-all duration-300 flex flex-col h-screen w-full ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-20'}`}>
         <header className={`sticky top-0 z-30 backdrop-blur-xl px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between border-b no-print transition-colors ${isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white/80 border-slate-200'}`}>
           <div className="flex items-center gap-3 md:gap-4">
@@ -734,11 +701,10 @@ export default function App() {
         </div>
       </main>
 
-      {/* MODAL DE RELATÓRIO */}
       {selectedEval && (
-        <div id="report-portal" className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-2 sm:p-4 md:p-6">
-          <div className={`${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'} w-full max-w-5xl h-full sm:h-auto max-h-full sm:max-h-[90vh] overflow-hidden sm:rounded-2xl border shadow-xl flex flex-col relative animate-in zoom-in-95 duration-200`}>
-            <div className={`px-4 sm:px-6 py-4 border-b flex justify-between items-center transition-colors modal-header-actions shrink-0 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div id="report-portal" className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-0 sm:p-4 md:p-6 print:p-0">
+          <div className={`${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'} w-full max-w-5xl h-full sm:h-auto max-h-full sm:max-h-[90vh] overflow-hidden sm:rounded-2xl border shadow-xl flex flex-col relative animate-in zoom-in-95 duration-200 print:h-auto print:max-h-none print:shadow-none print:border-none print:rounded-none`}>
+            <div className={`px-4 sm:px-6 py-4 border-b flex justify-between items-center transition-colors modal-header-actions shrink-0 no-print ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
               <div className="flex items-center gap-2 sm:gap-3">
                 <img src="/logo.svg" alt="Logo" className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 object-contain" onError={(e) => { e.target.onerror = null; e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"; }} />
                 <h3 className={`font-semibold text-base sm:text-lg ${isDark ? 'text-white' : 'text-slate-900'} truncate`}>Relatório de Auditoria</h3>
@@ -750,14 +716,13 @@ export default function App() {
                 <button onClick={() => setSelectedEval(null)} className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-600'}`}><X size={20}/></button>
               </div>
             </div>
-            <div className="overflow-y-auto flex-1 p-4 sm:p-6 lg:p-8">
+            <div className="overflow-y-auto flex-1 p-0 print:p-0 print:overflow-visible">
               <ReportContent evaluation={selectedEval} db={db} isDark={isDark} onExpandImage={setExpandedImg} />
             </div>
           </div>
         </div>
       )}
 
-      {/* VISUALIZADOR DE IMAGEM EXPANDIDA */}
       {expandedImg && (
         <div 
           className="fixed inset-0 z-[2000] bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200 no-print"
@@ -774,7 +739,6 @@ export default function App() {
         </div>
       )}
 
-      {}
       <style>{`
         @media print {
           body, html { 
@@ -825,7 +789,6 @@ export default function App() {
             padding: 0 !important;
           }
           
-          /* Força as cores de texto base para preto sem sobrescrever os badges coloridos */
           #report-portal .text-white, 
           #report-portal .text-slate-200, 
           #report-portal .text-slate-300, 
@@ -844,7 +807,6 @@ export default function App() {
             background-color: transparent !important;
           }
 
-          /* Evita cortes nos elementos ao mudar de página */
           .break-inside-avoid {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -855,8 +817,8 @@ export default function App() {
             print-color-adjust: exact !important;
           }
           @page { 
-            size: portrait; 
-            margin: 15mm; 
+            size: A4 portrait; 
+            margin: 0; 
           }
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -886,7 +848,6 @@ function HomeView({ db, user, setActiveTab, onShowReport, isDark }) {
 
   return (
     <div className="space-y-6 md:space-y-8 animate-in fade-in duration-300">
-      {/* HEADER BANNER */}
       <div className={`p-6 sm:p-8 md:p-10 rounded-2xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-[#0062FF] border-transparent'} shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden`}>
         <div className="relative z-10 w-full">
           <h1 className={`text-2xl md:text-3xl font-black text-white`}>Portal Qualidade e Conformidade</h1>
@@ -1449,7 +1410,6 @@ function DashboardView({ db, user, isDark }) {
         <StatCard isDark={isDark} title="Falhas" value={`${stats.inconf}%`} icon={<TrendingDown className="text-red-500" size={20}/>} />
       </section>
 
-      {/* GRÁFICO: Evolução Mensal */}
       <Card isDark={isDark} className="p-4 sm:p-6 relative min-h-[400px]">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h3 className={`text-sm sm:text-base font-semibold flex items-center gap-2 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
@@ -1464,7 +1424,6 @@ function DashboardView({ db, user, isDark }) {
         <MonthlyComboChart data={monthlyStats} isDark={isDark} />
       </Card>
 
-      {/* GRÁFICO: Inconformidades por Indicador */}
       <Card isDark={isDark} className="p-4 sm:p-6 relative min-h-[400px]">
         <div className="flex justify-between items-center mb-6">
           <h3 className={`text-sm sm:text-base font-semibold flex items-center gap-2 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
@@ -1474,7 +1433,6 @@ function DashboardView({ db, user, isDark }) {
         <IndicatorBarChart data={indicatorProblems} isDark={isDark} />
       </Card>
 
-      {/* GRÁFICO: Visitas por Loja */}
       <Card isDark={isDark} className="p-4 sm:p-6 relative min-h-[400px]">
         <div className="flex justify-between items-center mb-6">
           <h3 className={`text-sm sm:text-base font-semibold flex items-center gap-2 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
@@ -1484,7 +1442,6 @@ function DashboardView({ db, user, isDark }) {
         <VisitsBarChart data={[...rankings.storeRank].sort((a, b) => String(a.code).localeCompare(String(b.code), undefined, { numeric: true }))} isDark={isDark} />
       </Card>
 
-      {/* GRÁFICO: Avaliações Zeradas por Loja */}
       <Card isDark={isDark} className="p-4 sm:p-6 relative min-h-[400px]">
         <div className="flex justify-between items-center mb-6">
           <h3 className={`text-sm sm:text-base font-semibold flex items-center gap-2 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
@@ -2249,163 +2206,167 @@ function StatCard({ title, value, icon, subtitle, isDark }) {
 function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
   const store = db.stores.find(s => s.id == evaluation.storeId);
   const manager = db.managers.find(m => m.id == store?.managerId);
-  const textColor = isDark ? 'text-slate-200' : 'text-slate-800';
-  const borderColor = isDark ? 'border-slate-800' : 'border-slate-200';
-  const bgCard = isDark ? 'bg-slate-800/50' : 'bg-slate-50';
+  const parsedScore = Number(evaluation.score) || 0;
+
+  const HeaderBanner = () => (
+    <div className="flex items-center justify-between border-b-2 border-slate-300 pb-6 mb-8 px-6 pt-8 break-inside-avoid" style={{ backgroundColor: '#0062FF', color: 'white', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+      <div className="flex items-center gap-6">
+        <img src="/logo.svg" alt="Logo Qualidade" className="h-12 sm:h-14 object-contain brightness-0 invert" onError={(e) => { e.target.style.display = 'none'; }} />
+        <div className="h-10 w-px bg-white/30 hidden sm:block"></div>
+        <div className="flex flex-col gap-0.5 text-xs sm:text-sm font-medium">
+          <p>Loja: {store?.name || '---'}</p>
+          <p>Gestora: {manager?.name || '---'}</p>
+          <p>Avaliador (a): {evaluation.evaluator}</p>
+          <p>Data: {evaluation.date ? new Date(evaluation.date).toLocaleDateString('pt-BR') : '---'}</p>
+        </div>
+      </div>
+      <div className="text-right">
+        <h1 className="text-3xl sm:text-5xl font-black">{parsedScore.toFixed(2)}%</h1>
+        <p className="text-xs sm:text-sm font-medium opacity-90 mt-1">Pontuação</p>
+      </div>
+    </div>
+  );
+
+  const FooterBanner = () => (
+    <div className="w-full h-20 flex items-center justify-center bg-[#0062FF]" style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+       <img src="/logo-alvorar.svg" alt="Alvorar" className="h-8 sm:h-10 object-contain brightness-0 invert" onError={(e) => { e.target.style.display = 'none'; }} />
+    </div>
+  );
 
   const groupedDetails = {};
   evaluation.details?.forEach(det => {
     const q = db.questions.find(q => q.id == det.questionId);
     const indId = q ? q.indicatorId : 'unknown';
-    if (!groupedDetails[indId]) {
-      groupedDetails[indId] = [];
-    }
+    if (!groupedDetails[indId]) groupedDetails[indId] = [];
     groupedDetails[indId].push({ det, q: q || { text: 'Pergunta não encontrada', severity: 'neutral' } });
   });
 
-  const parsedScore = Number(evaluation.score) || 0;
+  const CardsList = () => (
+    <div className="space-y-8">
+      {Object.keys(groupedDetails).length === 0 && (
+        <p className="text-slate-500 italic text-sm text-center py-10">Nenhum detalhe técnico foi recuperado.</p>
+      )}
 
-  return (
-    <div className={`space-y-6 sm:space-y-8 ${textColor} text-left`}>
-      
-      {/* CABEÇALHO EXCLUSIVO PARA IMPRESSÃO */}
-      <div className="hidden print:flex items-center justify-between border-b-2 border-slate-300 pb-6 mb-8 break-inside-avoid">
-        <div className="flex items-center gap-6">
-          <img src="/logo.svg" alt="Logo Qualidade" className="h-14 object-contain" />
-          <div className="h-10 w-px bg-slate-300"></div>
-          <img src="/logo-alvorar.svg" alt="Logo Alvorar" className="h-10 object-contain" />
-        </div>
-        <div className="text-right">
-          <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900">Relatório de Auditoria</h1>
-          <p className="text-sm font-medium text-slate-500 mt-1">
-            Emitido em {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
-          </p>
-        </div>
-      </div>
+      {Object.keys(groupedDetails).map(indId => {
+        const indicator = db.indicators.find(i => i.id == indId);
+        const indName = indicator ? indicator.name : 'Desconhecido';
 
-      <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 border-b ${borderColor} pb-6 sm:pb-8 break-inside-avoid`}>
-        <div className="space-y-3 sm:space-y-4">
-          <div>
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">Unidade Avaliada</p>
-            <p className={`text-base sm:text-lg font-bold mt-0.5 ${isDark ? 'text-blue-400' : 'text-[#0062FF]'}`}>{store?.name || 'Desconhecida'}</p>
-          </div>
-          <div>
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">Data da Realização</p>
-            <p className="text-sm sm:text-base font-medium mt-0.5">{evaluation.date ? new Date(evaluation.date).toLocaleDateString('pt-BR') : '---'}</p>
-          </div>
-        </div>
-        <div className="space-y-3 sm:space-y-4 md:text-right">
-          <div>
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">Responsável pela Unidade</p>
-            <p className="text-sm sm:text-base font-medium mt-0.5">{manager?.name || 'Não informada'}</p>
-          </div>
-          <div>
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">Avaliador VQ</p>
-            <p className="text-sm sm:text-base font-medium mt-0.5">{evaluation.evaluator}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 break-inside-avoid">
-        <div className={`${bgCard} p-4 sm:p-5 rounded-xl border ${borderColor}`}>
-          <p className="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase mb-1">Score Obtido</p>
-          <p className={`text-2xl sm:text-3xl font-bold ${parsedScore >= 80 ? 'text-emerald-500' : 'text-red-500'}`}>
-            {parsedScore.toFixed(2)}%
-          </p>
-        </div>
-        <div className={`${bgCard} p-4 sm:p-5 rounded-xl border ${borderColor}`}>
-          <p className="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase mb-1">Resultado</p>
-          <p className="text-lg sm:text-xl font-bold mt-1">{parsedScore >= 80 ? 'Aprovado' : 'Requer Atenção'}</p>
-        </div>
-        <div className={`${bgCard} p-4 sm:p-5 rounded-xl border ${borderColor}`}>
-          <p className="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase mb-1">Penalizações</p>
-          <p className="text-lg sm:text-xl font-bold mt-1">{(100 - parsedScore).toFixed(2)} pts</p>
-        </div>
-      </div>
-
-      <div className="space-y-4 sm:space-y-6">
-        <h4 className={`text-base sm:text-lg font-bold border-l-4 pl-3 break-inside-avoid ${isDark ? 'border-blue-600' : 'border-[#0062FF]'}`}>Detalhamento dos Indicadores</h4>
-        
-        {Object.keys(groupedDetails).length === 0 && (
-          <p className="text-slate-500 italic text-sm break-inside-avoid">Nenhum detalhe técnico foi recuperado para este relatório.</p>
-        )}
-
-        {Object.keys(groupedDetails).map(indId => {
-          const indicator = db.indicators.find(i => i.id == indId);
-          const indName = indicator ? indicator.name : 'Removidos do Sistema';
-
-          return (
-            <div key={indId} className="space-y-3 mt-4">
-              <h5 className={`text-xs sm:text-sm font-semibold uppercase tracking-wider break-inside-avoid ${isDark ? 'text-slate-400 border-slate-800' : 'text-slate-500 border-slate-200'} border-b pb-2`}>
-                {indName}
-              </h5>
-
-              <div className="space-y-3">
-                {groupedDetails[indId].map(({det, q}) => {
-                  let mediaArray = [];
-                  try {
-                    if (Array.isArray(det.media)) {
-                      mediaArray = det.media;
-                    } else if (det.media && typeof det.media === 'object') {
-                      if (det.media.url) mediaArray = [det.media];
-                      else if (Object.keys(det.media).length > 0) mediaArray = [det.media];
-                    } else if (typeof det.media === 'string' && det.media.trim() !== '') {
-                      if (det.media.startsWith('[') || det.media.startsWith('{')) {
-                        const parsed = JSON.parse(det.media);
-                        mediaArray = Array.isArray(parsed) ? parsed : [parsed];
-                      } else {
-                        mediaArray = [{ url: det.media }];
-                      }
-                    }
-                  } catch (e) {
-                    console.error("Erro ao fazer parseamento de mídias:", e);
+        return (
+          <div key={indId} className="space-y-6">
+            {groupedDetails[indId].map(({det, q}) => {
+              let mediaArray = [];
+              try {
+                if (Array.isArray(det.media)) {
+                  mediaArray = det.media;
+                } else if (det.media && typeof det.media === 'object') {
+                  if (det.media.url) mediaArray = [det.media];
+                  else if (Object.keys(det.media).length > 0) mediaArray = [det.media];
+                } else if (typeof det.media === 'string' && det.media.trim() !== '') {
+                  if (det.media.startsWith('[') || det.media.startsWith('{')) {
+                    const parsed = JSON.parse(det.media);
+                    mediaArray = Array.isArray(parsed) ? parsed : [parsed];
+                  } else {
+                    mediaArray = [{ url: det.media }];
                   }
+                }
+              } catch (e) {
+                console.error("Erro ao fazer parseamento de mídias:", e);
+              }
 
-                  return (
-                    <div key={det.id || det.questionId} className={`break-inside-avoid ${bgCard} border ${borderColor} rounded-lg p-4 sm:p-5 mb-4`}>
-                      <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
-                        <p className="font-medium text-sm leading-relaxed flex-1">{q.text}</p>
-                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
-                          {(det.cpValidated || det.cp_validated) && <Badge isDark={isDark} type="warning">Corrigido</Badge>}
-                          <Badge isDark={isDark} type={det.answer === 'conforme' ? 'success' : det.answer === 'inconforme' ? 'danger' : 'neutral'}>
-                            {det.answer === 'na' ? 'N/A' : det.answer === 'conforme' ? 'Conforme' : 'Não Conforme'}
-                          </Badge>
-                        </div>
-                      </div>
+              const severityText = q.severity === 'gravissima' ? 'Gravíssima' :
+                                   q.severity === 'grave' ? 'Grave' :
+                                   q.severity === 'media' ? 'Média' : 'Leve';
 
-                      {det.comment && (
-                        <div className={`mt-3 ${isDark ? 'bg-slate-900' : 'bg-white'} p-3 rounded-md border ${borderColor} flex gap-2 items-start`}>
-                          <Info size={16} className="text-slate-400 shrink-0 mt-0.5"/>
-                          <p className={`text-xs sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{det.comment}</p>
-                        </div>
-                      )}
+              return (
+                <div key={det.id || det.questionId} className="border-2 border-[#0062FF] rounded-xl p-5 sm:p-6 bg-white break-inside-avoid mb-6">
+                  <h4 className="font-bold text-slate-900 text-sm mb-2">
+                    Questão {severityText} pilar {indName.toLowerCase()}
+                  </h4>
+                  <p className="font-medium text-sm text-slate-800 mb-4">{q.text}</p>
 
-                      {/* LAYOUT DE IMAGENS MELHORADO PARA IMPRESSÃO */}
-                      {mediaArray && mediaArray.length > 0 && (
-                        <div className="mt-4 pt-4 border-t border-dashed border-slate-200 print:border-slate-300">
-                          <p className="text-[10px] sm:text-xs font-semibold uppercase text-slate-500 mb-3 print:text-slate-600">
-                            Evidências Fotográficas Adicionadas
-                          </p>
-                          <div className="flex flex-wrap gap-3 print:gap-5">
-                            {mediaArray.map((img, i) => (
-                              <div key={i} className="relative group cursor-zoom-in break-inside-avoid" onClick={() => onExpandImage(img.url || img)}>
-                                <img 
-                                  src={typeof img === 'string' ? img : img.url} 
-                                  className={`w-16 h-16 sm:w-20 sm:h-20 print:w-48 print:h-48 object-cover rounded-md print:rounded-xl border ${borderColor} print:border-slate-300 print:shadow-md hover:opacity-80 transition-opacity`} 
-                                />
-                              </div>
-                            ))}
+                  {mediaArray && mediaArray.length > 0 && (
+                    <div className="flex flex-wrap gap-4 mb-4">
+                      {mediaArray.map((img, i) => (
+                        <div key={i} className="relative cursor-zoom-in" onClick={() => onExpandImage(img.url || img)}>
+                          <div className="bg-[#e5e7eb] w-32 h-32 sm:w-40 sm:h-40 rounded-lg flex items-center justify-center overflow-hidden">
+                            <img
+                              src={typeof img === 'string' ? img : img.url}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform"
+                              alt="Evidência"
+                            />
                           </div>
                         </div>
-                      )}
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+                  )}
+
+                  <div className="bg-[#e5e7eb] rounded-lg p-4 min-h-[80px]">
+                    <p className="text-sm font-bold text-slate-800 mb-1">Comentário:</p>
+                    <p className="text-sm text-slate-700 whitespace-pre-wrap">{det.comment || ''}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <div className="w-full flex flex-col min-h-screen bg-white text-slate-900 print:block">
+      
+      {/* TELA DE COMPUTADOR: Header e Footer normais */}
+      <div className="print:hidden w-full flex flex-col min-h-full">
+        <HeaderBanner />
+        
+        <div className="flex-1 w-full max-w-4xl mx-auto p-4 sm:p-8">
+          <CardsList />
+        </div>
+
+        <div className="mt-auto">
+          <FooterBanner />
+        </div>
       </div>
+
+      {/* TELA DE IMPRESSÃO: Cabecalho na Tabela e Rodapé Fixo */}
+      <div className="hidden print:block relative w-full">
+        
+        {/* Rodapé Fixo no fundo de todas as páginas */}
+        <div className="fixed bottom-0 left-0 w-full z-[100]" style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+          <FooterBanner />
+        </div>
+
+        <table className="w-full border-collapse border-0 border-spacing-0">
+          <thead className="table-header-group">
+            <tr>
+              <td className="p-0 border-0">
+                <HeaderBanner />
+                {/* Espaçador para o conteúdo não colar no cabeçalho */}
+                <div className="h-6 bg-white"></div>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="p-0 border-0">
+                <div className="max-w-4xl mx-auto px-6 bg-white pb-8">
+                  <CardsList />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot className="table-footer-group">
+            <tr>
+              <td className="p-0 border-0">
+                {/* Espaçador INVISÍVEL gigante para reservar o espaço do rodapé fixo e evitar sobreposição do conteúdo */}
+                <div className="h-28 bg-transparent"></div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
     </div>
   );
 }
@@ -2426,6 +2387,26 @@ function FormSelect({ label, children, isDark, ...props }) {
       <select className={`w-full border rounded-lg px-3 py-2 sm:py-2.5 text-sm outline-none cursor-pointer transition-colors ${isDark ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-600'}`} {...props}>{children}</select>
     </div>
   ); 
+}
+
+function UserForm({ editingItem, db, isDark }) {
+  return (
+    <>
+      <FormInput label="Nome" name="name" isDark={isDark} defaultValue={editingItem?.name} required />
+      <FormInput label="Email" name="email" isDark={isDark} defaultValue={editingItem?.email} required type="email" />
+      <FormInput label="Senha" name="password" isDark={isDark} defaultValue={editingItem?.password} required={!editingItem} type="password" />
+      <FormSelect label="Função" name="role" isDark={isDark} defaultValue={editingItem?.role || 'supervisor'}>
+        <option value="admin">Administrador</option>
+        <option value="supervisor">Supervisora</option>
+        <option value="manager">Gestora</option>
+      </FormSelect>
+      <FormSelect label="Loja Vinculada (Apenas para Gestoras)" name="storeId" isDark={isDark} defaultValue={editingItem?.storeId || ""}>
+        <option value="">Nenhuma</option>
+        {db.stores?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+      </FormSelect>
+      <FormInput label="Lojas Acessíveis (IDs separados por vírgula)" name="accessibleStores" isDark={isDark} defaultValue={editingItem?.accessibleStores?.join(', ') || ""} />
+    </>
+  );
 }
 
 function LoginView({ onLogin }) {
@@ -2490,7 +2471,7 @@ function LoginView({ onLogin }) {
                 type="submit"
                 className="w-full bg-[#EBFF00] hover:bg-[#d4e600] active:scale-[0.98] text-[#0062FF] font-black text-xl rounded-[12px] py-4 transition-all mt-4 shadow-[0_4px_20px_0_rgba(235,255,0,0.3)]"
              >
-                Entra
+                Entrar
              </button>
 
              {/* Logo Secundária - Alvorar */}
