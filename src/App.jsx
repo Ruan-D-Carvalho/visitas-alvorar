@@ -180,11 +180,11 @@ function MonthlyComboChart({ data, isDark }) {
               const visitVal = (gridVisitsMax * (pct / 100));
               return (
                 <div key={pct} className="w-full flex items-center gap-2 absolute" style={{ bottom: `${pct}%`, transform: 'translateY(50%)' }}>
-                  <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                  <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-700'}`}>
                     {scoreVal}%
                   </span>
                   <div className={`w-full h-px ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
-                  <span className={`text-[10px] font-medium w-8 text-left absolute -right-8 sm:-right-10 ${isDark ? 'text-indigo-500/50' : 'text-indigo-400'}`}>
+                  <span className={`text-[10px] font-medium w-8 text-left absolute -right-8 sm:-right-10 ${isDark ? 'text-indigo-500/50' : 'text-indigo-700'}`}>
                     {visitVal}
                   </span>
                 </div>
@@ -201,7 +201,7 @@ function MonthlyComboChart({ data, isDark }) {
                 <div key={idx} className="flex-1 flex justify-center gap-1 sm:gap-2 h-full relative group" style={{ maxWidth: '80px' }}>
                   <div className="w-1/2 h-full flex flex-col justify-end items-center relative">
                     <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${scoreHeight}%` }}>
-                      <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
+                      <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} whitespace-nowrap`}>
                         {item.score.toFixed(1)}%
                       </span>
                     </div>
@@ -209,14 +209,14 @@ function MonthlyComboChart({ data, isDark }) {
                   </div>
                   <div className="w-1/2 h-full flex flex-col justify-end items-center relative">
                     <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${visitsHeight}%` }}>
-                      <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
+                      <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} whitespace-nowrap`}>
                         {item.visits}
                       </span>
                     </div>
                     <div className="w-full rounded-t-sm transition-all duration-1000 ease-out bg-indigo-500 hover:bg-indigo-400" style={{ height: `${visitsHeight}%` }} />
                   </div>
                   <div className="absolute top-full mt-2 w-full flex justify-center">
-                    <span className={`text-[10px] font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'} whitespace-nowrap`}>
+                    <span className={`text-[10px] font-medium ${isDark ? 'text-slate-400' : 'text-slate-700'} whitespace-nowrap`}>
                       {item.label}
                     </span>
                   </div>
@@ -249,7 +249,7 @@ function IndicatorBarChart({ data, isDark }) {
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {gridLines.map((val, i) => (
               <div key={i} className="w-full flex items-center gap-2 absolute" style={{ bottom: `${(val / gridMax) * 100}%`, transform: 'translateY(50%)' }}>
-                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-700'}`}>
                   {val}
                 </span>
                 <div className={`w-full h-px ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
@@ -264,7 +264,7 @@ function IndicatorBarChart({ data, isDark }) {
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center relative h-full justify-end group" style={{ maxWidth: '50px' }}>
                   <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${barHeight}%` }}>
-                    <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
+                    <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} whitespace-nowrap`}>
                       {count}
                     </span>
                   </div>
@@ -276,7 +276,7 @@ function IndicatorBarChart({ data, isDark }) {
                   </div>
                   <div className="absolute top-full mt-2 w-full flex justify-center px-1">
                     <span 
-                      className={`text-[9px] leading-tight text-center font-medium whitespace-normal break-words ${isDark ? 'text-slate-400' : 'text-slate-500'} w-14 sm:w-20 line-clamp-3`}
+                      className={`text-[9px] leading-tight text-center font-medium whitespace-normal break-words ${isDark ? 'text-slate-400' : 'text-slate-700'} w-14 sm:w-20 line-clamp-3`}
                       title={item.name}
                     >
                       {item.name}
@@ -307,7 +307,7 @@ function VisitsBarChart({ data, isDark }) {
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {gridLines.map((val, i) => (
               <div key={i} className="w-full flex items-center gap-2 absolute" style={{ bottom: `${(val / gridMax) * 100}%`, transform: 'translateY(50%)' }}>
-                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-700'}`}>
                   {val}
                 </span>
                 <div className={`w-full h-px ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
@@ -322,7 +322,7 @@ function VisitsBarChart({ data, isDark }) {
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center relative h-full justify-end group" style={{ maxWidth: '50px' }}>
                   <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${barHeight}%` }}>
-                    <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
+                    <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} whitespace-nowrap`}>
                       {visits}
                     </span>
                   </div>
@@ -334,7 +334,7 @@ function VisitsBarChart({ data, isDark }) {
                   </div>
                   <div className="absolute top-full mt-2 w-full flex justify-center">
                     <span 
-                      className={`text-[9px] sm:text-[10px] font-medium uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'} origin-top-left rotate-45 whitespace-nowrap`}
+                      className={`text-[9px] sm:text-[10px] font-medium uppercase ${isDark ? 'text-slate-400' : 'text-slate-700'} origin-top-left rotate-45 whitespace-nowrap`}
                       title={item.code}
                     >
                       {item.code}
@@ -365,7 +365,7 @@ function ZeroedBarChart({ data, isDark }) {
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {gridLines.map((val, i) => (
               <div key={i} className="w-full flex items-center gap-2 absolute" style={{ bottom: `${(val / gridMax) * 100}%`, transform: 'translateY(50%)' }}>
-                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-700'}`}>
                   {val}
                 </span>
                 <div className={`w-full h-px ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
@@ -379,7 +379,7 @@ function ZeroedBarChart({ data, isDark }) {
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center relative h-full justify-end group" style={{ maxWidth: '50px' }}>
                   <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${barHeight}%` }}>
-                    <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
+                    <span className={`text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} whitespace-nowrap`}>
                       {zeroes}
                     </span>
                   </div>
@@ -387,7 +387,7 @@ function ZeroedBarChart({ data, isDark }) {
                     <div className="w-full rounded-t-sm transition-all duration-1000 ease-out bg-red-500 hover:bg-red-400" style={{ height: `${barHeight}%` }} />
                   </div>
                   <div className="absolute top-full mt-2 w-full flex justify-center">
-                    <span className={`text-[9px] sm:text-[10px] font-medium uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'} origin-top-left rotate-45 whitespace-nowrap`} title={item.code}>
+                    <span className={`text-[9px] sm:text-[10px] font-medium uppercase ${isDark ? 'text-slate-400' : 'text-slate-700'} origin-top-left rotate-45 whitespace-nowrap`} title={item.code}>
                       {item.code}
                     </span>
                   </div>
@@ -416,7 +416,7 @@ function PerformanceBarChart({ data, isDark }) {
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {[100, 75, 50, 25, 0].map(val => (
               <div key={val} className="w-full flex items-center gap-2 absolute" style={{ bottom: `${val}%`, transform: 'translateY(50%)' }}>
-                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                <span className={`text-[10px] font-medium w-8 text-right absolute -left-10 sm:-left-12 ${isDark ? 'text-slate-500' : 'text-slate-700'}`}>
                   {val}%
                 </span>
                 <div className={`w-full h-px ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
@@ -425,7 +425,7 @@ function PerformanceBarChart({ data, isDark }) {
           </div>
 
           <div className="absolute left-0 right-0 border-t border-dashed border-emerald-500 z-10 flex items-center" style={{ bottom: `${target}%` }}>
-            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full absolute -left-4 -top-3 border ${isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full absolute -left-4 -top-3 border ${isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-100 text-emerald-800 border-emerald-300'}`}>
               Meta {target}%
             </span>
           </div>
@@ -439,7 +439,7 @@ function PerformanceBarChart({ data, isDark }) {
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center relative h-full justify-end group" style={{ maxWidth: '50px' }}>
                   <div className="absolute w-full flex justify-center pb-1.5 transition-all duration-700" style={{ bottom: `${barHeight}%` }}>
-                    <span className={`text-[9px] sm:text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} whitespace-nowrap`}>
+                    <span className={`text-[9px] sm:text-[10px] font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} whitespace-nowrap`}>
                       {parsedScore.toFixed(0)}%
                     </span>
                   </div>
@@ -447,7 +447,7 @@ function PerformanceBarChart({ data, isDark }) {
                     <div className={`w-full rounded-t-sm transition-all duration-1000 ease-out ${isSuccess ? 'bg-blue-500 hover:bg-blue-400' : 'bg-slate-400 hover:bg-slate-300'}`} style={{ height: `${barHeight}%` }} />
                   </div>
                   <div className="absolute top-full mt-2 w-full flex justify-center">
-                    <span className={`text-[9px] sm:text-[10px] font-medium uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'} origin-top-left rotate-45 whitespace-nowrap`} title={item.code}>
+                    <span className={`text-[9px] sm:text-[10px] font-medium uppercase ${isDark ? 'text-slate-400' : 'text-slate-700'} origin-top-left rotate-45 whitespace-nowrap`} title={item.code}>
                       {item.code}
                     </span>
                   </div>
@@ -1059,7 +1059,21 @@ function ManagementView({ db, supabaseClient, fetchData, isDark }) {
 
 function DashboardView({ db, user, isDark }) {
   const [filterChannel, setFilterChannel] = useState('all');
-  const [filterMonth, setFilterMonth] = useState(""); 
+  const [filterMonths, setFilterMonths] = useState([]); // Agora é um array
+
+  const formatMonth = (m) => {
+    if (!m) return "";
+    const [year, month] = m.split('-');
+    return `${month}/${year}`;
+  };
+
+  const availableMonths = useMemo(() => {
+    const monthsSet = new Set();
+    (db.evaluations || []).forEach(ev => {
+      if (ev.date) monthsSet.add(ev.date.substring(0, 7));
+    });
+    return Array.from(monthsSet).sort().reverse();
+  }, [db.evaluations]);
 
   const filteredEvals = useMemo(() => {
     let list = db.evaluations || [];
@@ -1070,10 +1084,13 @@ function DashboardView({ db, user, isDark }) {
       const store = db.stores.find(s => s.id == ev.storeId);
       const evalChannelId = ev.channelId || store?.channelId; // Obtém o canal da avaliação ou deduz pela Loja
       const matchChannel = filterChannel === 'all' || evalChannelId == filterChannel;
-      const matchMonth = filterMonth === '' || ev.date?.startsWith(filterMonth);
+      
+      // Nova lógica de filtro: verifica se está vazio OU se a data faz parte do array
+      const matchMonth = filterMonths.length === 0 || (ev.date && filterMonths.includes(ev.date.substring(0, 7)));
+      
       return matchChannel && matchMonth;
     });
-  }, [db.evaluations, db.stores, user, filterChannel, filterMonth]);
+  }, [db.evaluations, db.stores, user, filterChannel, filterMonths]);
 
   const stats = useMemo(() => {
     if (!filteredEvals.length) return { audits: 0, stores: 0, conf: "0.00", inconf: "0.00" };
@@ -1177,12 +1194,6 @@ function DashboardView({ db, user, isDark }) {
   }, [filteredEvals, db.questions]);
 
   // --- LÓGICA CONSOLIDADA PARA AS MATRIZES ---
-  const formatMonth = (m) => {
-    if (!m) return "";
-    const [year, month] = m.split('-');
-    return `${month}/${year}`;
-  };
-
   const { matrixMonths, matrixData, matrixTotals } = useMemo(() => {
     const monthsSet = new Set();
     filteredEvals.forEach(ev => {
@@ -1387,19 +1398,46 @@ function DashboardView({ db, user, isDark }) {
       </div>
 
       <Card isDark={isDark} className="p-4 sm:p-6 no-print">
-        <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-end">
-          <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[200px]">
-            <label className={`text-xs font-medium flex items-center gap-1.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}><Filter size={14}/> Filtro por Canal</label>
-            <select className={`w-full border rounded-lg px-3 py-2 text-sm outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-900'}`} value={filterChannel} onChange={e => setFilterChannel(e.target.value)}>
-              <option value="all">Todos os Canais</option>
-              {db.channels.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-end">
+            <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[200px]">
+              <label className={`text-xs font-medium flex items-center gap-1.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}><Filter size={14}/> Filtro por Canal</label>
+              <select className={`w-full border rounded-lg px-3 py-2 text-sm outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-900'}`} value={filterChannel} onChange={e => setFilterChannel(e.target.value)}>
+                <option value="all">Todos os Canais</option>
+                {db.channels.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+            <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[200px]">
+              <label className={`text-xs font-medium flex items-center gap-1.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}><Calendar size={14}/> Meses Referência</label>
+              <select 
+                className={`w-full border rounded-lg px-3 py-2 text-sm outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-900'}`} 
+                value="" 
+                onChange={e => {
+                  if (e.target.value && !filterMonths.includes(e.target.value)) {
+                    setFilterMonths([...filterMonths, e.target.value]);
+                  }
+                }}
+              >
+                <option value="">Selecione para adicionar...</option>
+                {availableMonths.map(m => <option key={m} value={m}>{formatMonth(m)}</option>)}
+              </select>
+            </div>
+            <Button variant="outline" className="w-full sm:w-auto h-[38px] mt-auto" onClick={() => { setFilterChannel('all'); setFilterMonths([]); }} isDark={isDark}>Limpar Filtros</Button>
           </div>
-          <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[200px]">
-            <label className={`text-xs font-medium flex items-center gap-1.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}><Calendar size={14}/> Mês Referência</label>
-            <input type="month" className={`w-full border rounded-lg px-3 py-2 text-sm outline-none transition-colors ${isDark ? 'bg-slate-900 border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-900'}`} value={filterMonth} onChange={e => setFilterMonth(e.target.value)} />
-          </div>
-          <Button variant="outline" className="w-full sm:w-auto" onClick={() => { setFilterChannel('all'); setFilterMonth(""); }} isDark={isDark}>Limpar Filtros</Button>
+          
+          {filterMonths.length > 0 && (
+            <div className={`flex flex-wrap gap-2 pt-3 border-t ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+              <span className={`text-xs self-center mr-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Meses filtrados:</span>
+              {filterMonths.map(m => (
+                <span key={m} className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md font-medium ${isDark ? 'bg-blue-500/20 text-blue-300' : 'bg-blue-100 text-blue-800'}`}>
+                  {formatMonth(m)}
+                  <button onClick={() => setFilterMonths(filterMonths.filter(x => x !== m))} className="hover:text-red-500 transition-colors">
+                    <X size={12} strokeWidth={3} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </Card>
 
@@ -1777,7 +1815,7 @@ function DashboardView({ db, user, isDark }) {
           <table className="w-full text-left text-sm min-w-max">
             <thead className={`${isDark ? 'bg-slate-800/50 text-slate-400' : 'bg-slate-50 text-slate-500'}`}>
               <tr>
-                <th className="px-4 sm:px-6 py-3 font-medium">Parâmetro Evaluado</th>
+                <th className="px-4 sm:px-6 py-3 font-medium">Parâmetro Avaliado</th>
                 <th className="px-4 sm:px-6 py-3 font-medium text-right">Frequência</th>
               </tr>
             </thead>
@@ -2279,9 +2317,25 @@ function ReportContent({ evaluation, db, isDark = true, onExpandImage }) {
 
               return (
                 <div key={det.id || det.questionId} className="border-2 border-[#0062FF] rounded-xl p-5 sm:p-6 bg-white break-inside-avoid mb-6">
-                  <h4 className="font-bold text-slate-900 text-sm mb-2">
-                    Questão {severityText} pilar {indName.toLowerCase()}
-                  </h4>
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4 mb-2">
+                    <h4 className="font-bold text-slate-900 text-sm">
+                      Questão {severityText} pilar {indName.toLowerCase()}
+                    </h4>
+                    <div className="flex flex-wrap items-center gap-2 shrink-0">
+                      {(det.cpValidated || det.cp_validated) && (
+                        <span className="px-2.5 py-1 bg-amber-100 text-amber-700 border border-amber-200 rounded-md text-[10px] sm:text-xs font-bold whitespace-nowrap" style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+                          Plano de Ação Validado
+                        </span>
+                      )}
+                      <span className={`px-2.5 py-1 rounded-md text-[10px] sm:text-xs font-bold border whitespace-nowrap ${
+                        det.answer === 'conforme' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 
+                        det.answer === 'inconforme' ? 'bg-red-100 text-red-700 border-red-200' : 
+                        'bg-slate-100 text-slate-700 border-slate-200'
+                      }`} style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+                        {det.answer === 'na' ? 'Não se Aplica' : det.answer === 'conforme' ? 'Conforme' : 'Não Conforme'}
+                      </span>
+                    </div>
+                  </div>
                   <p className="font-medium text-sm text-slate-800 mb-4">{q.text}</p>
 
                   {mediaArray && mediaArray.length > 0 && (
